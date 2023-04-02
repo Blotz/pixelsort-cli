@@ -46,7 +46,7 @@ options:
 pixelsorter  data/mountains.jpg right --threshold 0.7 --invert True --output out.png
 ```
 
-![example 1](https://raw.githubusercontent.com/Blotz/pixelsorter/main/data/exammple1.png)
+![example 1](https://raw.githubusercontent.com/Blotz/pixelsorter/main/data/example1.png)
 
 ---
 
