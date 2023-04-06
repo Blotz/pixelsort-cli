@@ -21,7 +21,7 @@ def process(image: np.ndarray, direction: Direction, threshold: float, invert: b
     print(f"Processing image with {direction.name} direction, threshold={threshold}, invert={invert}, reverse_sort={reverse_sort}")
 
     if invert:  # invert image if sorting in reverse
-        threshold =  2 - threshold
+        threshold =   1 - threshold
         contrast: np.ndarray = create_contrast_mask(image, threshold)
         contrast: np.ndarray = cv2.bitwise_not(contrast)
     else:
@@ -44,7 +44,7 @@ def process(image: np.ndarray, direction: Direction, threshold: float, invert: b
             process_slice(row_contrast, row_image, is_sort_reverse)
     
     print("Done")
-    show_image(image)
+    # show_image(image)
 
 
 def process_slice(contrast_slice: np.ndarray, image_slice: np.ndarray, is_sort_reverse: bool) -> None:
