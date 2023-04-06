@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pixelsorter"
+version = "0.1.1"
+authors = [
+    {name = "Ferdinand Theil", email = "f.p.theil@proton.me"},
+]
+description = "A Python CLI tool for sorting pixels in images."
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    'numpy',
+    'opencv-python',
+    'filetype'
+]
+
+[project.urls]
+"Homepage" = "https://github.com/Blotz/pixelsorter"
+"Bug Tracker" = "https://github.com/Blotz/pixelsorter/issues"
+
+[project.scripts]
+pixelsorter = "pixelsorter.cli:main"
+
+[project.optional-dependencies]
+test = [
+    'pytest'
+]
+
