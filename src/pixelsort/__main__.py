@@ -1,4 +1,4 @@
-from pixelsorter.cli import main
+from pixelsort.cli import main
 
 if __name__ == "__main__":
     main()

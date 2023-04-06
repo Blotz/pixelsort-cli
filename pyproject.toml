@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pixelsorter"
+name = "pixelsort-cli"
 version = "0.1.1"
 authors = [
     {name = "Ferdinand Theil", email = "f.p.theil@proton.me"},
@@ -23,11 +23,11 @@ dependencies = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/Blotz/pixelsorter"
-"Bug Tracker" = "https://github.com/Blotz/pixelsorter/issues"
+"Homepage" = "https://github.com/Blotz/pixelsort-cli"
+"Bug Tracker" = "https://github.com/Blotz/pixelsort-cli/issues"
 
 [project.scripts]
-pixelsorter = "pixelsorter.cli:main"
+pixelsort = "pixelsort.cli:main"
 
 [project.optional-dependencies]
 test = [

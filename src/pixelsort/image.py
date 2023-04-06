@@ -1,7 +1,7 @@
 """image.py
 All image processing functions
 """
-from pixelsorter.direction import Direction
+from pixelsort.direction import Direction
 import numpy as np
 import cv2
 

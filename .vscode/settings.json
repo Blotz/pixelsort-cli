@@ -4,6 +4,7 @@
         "imshow",
         "imwrite",
         "ndarray",
+        "pixelsort",
         "pixelsorter"
     ],
     "python.testing.pytestArgs": [

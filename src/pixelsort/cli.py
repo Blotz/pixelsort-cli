@@ -3,9 +3,9 @@ The main entry point of our application.
 Handles all tui actions. 
 """
 
-from pixelsorter import (__name__ as __package__name__, __doc__ as __package__doc__)
-from pixelsorter.direction import Direction
-from pixelsorter.image import process
+from pixelsort import (__name__ as __package__name__, __doc__ as __package__doc__)
+from pixelsort.direction import Direction
+from pixelsort.image import process
 from numpy import ndarray
 from cv2 import imread, imwrite
 import argparse

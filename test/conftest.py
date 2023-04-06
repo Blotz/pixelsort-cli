@@ -1,7 +1,7 @@
 import pytest
 import cv2
 import numpy as np
-from pixelsorter import direction
+from pixelsort import direction
 
 # create image fixture
 @pytest.fixture

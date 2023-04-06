@@ -1,4 +1,4 @@
-# Pixel Sorter
+# pixelsort cli
 
 A simple python command line tool for sort pixels in an image.
 Based on the works of [Kim Asendorf](https://github.com/kimasendorf/ASDFPixelSort).
@@ -14,7 +14,13 @@ Then it sorts the pixels in a given direction via their luminance.
 ### Install
 
 ```bash
-pip install git+https://github.com/Blotz/pixelsorter
+pip install git+https://github.com/Blotz/pixelsort-cli
+```
+
+or
+
+```bash
+pip install pixelsorter-cli
 ```
 
 ## Examples
@@ -24,7 +30,7 @@ pixelsorter --help
 ```
 
 ```bash
-usage: Pixel Sorter [-h] [--threshold THRESHOLD] [--invert INVERT] [--reverse_sorting REVERSE_SORTING] [--output OUTPUT] image_path {up,down,left,right}
+usage: pixelsort [-h] [--threshold THRESHOLD] [--invert INVERT] [--reverse_sorting REVERSE_SORTING] [--output OUTPUT] image_path {up,down,left,right}
 
 Command line tool for sorting pixels
 
@@ -46,7 +52,7 @@ options:
 pixelsorter  data/mountains.jpg right --threshold 0.7 --invert True --output out.png
 ```
 
-![example 1](https://raw.githubusercontent.com/Blotz/pixelsorter/main/data/example1.png)
+![example 1](https://raw.githubusercontent.com/Blotz/pixelsort-cli/main/data/example1.png)
 
 ---
 
