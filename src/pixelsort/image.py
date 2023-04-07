@@ -113,17 +113,18 @@ def sort_pixels(image: np.ndarray, reverse: bool = False) -> None:
     """
     # sort pixels by luminance
     # luminance = (r * 0.3) + (g * 0.59) + (b * 0.11)
-    if image.size < 2:  # no point in sorting
+    # no point in sorting if there are less than 2 pixels
+    if image.size <= 2*3:  # 2 pixels, 3 channels
         return
 
     # sort by luminance
-    sorted_image = np.array(sorted(
-        image,
-        key=lambda x: (x[0] * 0.3) + (x[1] * 0.59) + (x[2] * 0.11),
-        reverse=reverse
-    ))
-    # copy data to original array
-    image[:] = sorted_image
+    luminance = np.sum(image * [0.3, 0.59, 0.11], axis=-1)
+    index = np.argsort(luminance)
+
+    if reverse:
+        index = index[::-1]
+
+    image[:] = image[index]
 
 
 def show_image(image: np.ndarray) -> None:
