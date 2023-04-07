@@ -114,7 +114,8 @@ def sort_pixels(image: np.ndarray, reverse: bool = False) -> None:
         return
 
     # sort by luminance
-    luminance = np.sum(image * [0.3, 0.59, 0.11], axis=-1)
+    # numpy is b g r
+    luminance = np.sum(image * [0.11, 0.59, 0.3], axis=-1)
     index = np.argsort(luminance)
 
     if reverse:
