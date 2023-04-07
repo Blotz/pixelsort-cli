@@ -44,7 +44,9 @@ def main() -> None:
 
     # save image
     if output_path is None:
-        return
+        # show image if no output path is given
+        image.show_image(image_data)
+
     # Parse output path
     output_path = pathlib.Path(output_path)
     if not cli.valid_write_image_path(output_path):

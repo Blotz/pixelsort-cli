@@ -41,7 +41,6 @@ def process_image(image: np.ndarray, direction: Direction, threshold: float, inv
             process_slice(row_contrast, row_image, is_sort_reverse)
 
     print("Done")
-    show_image(image)
 
 
 def process_slice(contrast_slice: np.ndarray, image_slice: np.ndarray, is_sort_reverse: bool) -> None:
