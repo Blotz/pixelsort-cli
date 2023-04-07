@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 from pixelsort import direction
 
+
 # create image fixture
 @pytest.fixture
 def image() -> np.ndarray:
@@ -14,6 +15,7 @@ def image() -> np.ndarray:
         raise Exception("Error loading image")
     
     return image
+
 
 # array of test cases
 test_cases = [
