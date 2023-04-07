@@ -27,7 +27,7 @@ dependencies = [
 "Bug Tracker" = "https://github.com/Blotz/pixelsort-cli/issues"
 
 [project.scripts]
-pixelsort = "pixelsort.cli:main"
+pixelsort = "pixelsort.__main__:main"
 
 [project.optional-dependencies]
 test = [

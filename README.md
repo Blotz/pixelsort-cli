@@ -20,13 +20,13 @@ pip install git+https://github.com/Blotz/pixelsort-cli
 or
 
 ```bash
-pip install pixelsorter-cli
+pip install pixelsort-cli
 ```
 
 ## Examples
 
 ```bash
-pixelsorter --help
+pixelsort --help
 ```
 
 ```bash
@@ -49,7 +49,7 @@ options:
 ```
 
 ```bash
-pixelsorter  data/mountains.jpg right --threshold 0.7 --invert True --output out.png
+pixelsort  data/mountains.jpg right --threshold 0.7 --invert True --output out.png
 ```
 
 ![example 1](https://raw.githubusercontent.com/Blotz/pixelsort-cli/main/data/example1.png)
