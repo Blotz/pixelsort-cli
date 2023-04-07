@@ -45,7 +45,7 @@ def main() -> None:
     # save image
     if output_path is None:
         # show image if no output path is given
-        image.show_image(image_data)
+        return image.show_image(image_data)
 
     # Parse output path
     output_path = pathlib.Path(output_path)
