@@ -49,7 +49,7 @@ options:
 ```
 
 ```bash
-pixelsort  data/mountains.jpg right --threshold 0.7 --invert True --output out.png
+pixelsort  data/mountains.jpg right --threshold 1.2 --invert True --output out.png
 ```
 
 ![example 1](https://raw.githubusercontent.com/Blotz/pixelsort-cli/main/data/example1.png)
