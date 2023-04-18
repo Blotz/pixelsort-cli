@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pixelsort-cli"
-version = "0.1.5"
+version = "0.1.6"
 authors = [
     {name = "Ferdinand Theil", email = "f.p.theil@proton.me"},
 ]
