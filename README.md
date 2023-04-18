@@ -1,7 +1,8 @@
 # pixelsort cli
 
-![tests](https://github.com/Blotz/pixelsort-cli/actions/workflows/python-package.yml/badge.svg)
-![package](https://github.com/Blotz/pixelsort-cli/actions/workflows/python-publish.yml/badge.svg)
+[![tests](https://github.com/Blotz/pixelsort-cli/actions/workflows/python-package.yml/badge.svg)](https://github.com/Blotz/pixelsort-cli/actions/workflows/python-package.yml)
+[![package](https://github.com/Blotz/pixelsort-cli/actions/workflows/python-publish.yml/badge.svg)](https://github.com/Blotz/pixelsort-cli/actions/workflows/python-publish.yml)
+[![CodeQL](https://github.com/Blotz/pixelsort-cli/actions/workflows/codeql.yml/badge.svg)](https://github.com/Blotz/pixelsort-cli/actions/workflows/codeql.yml)
 
 A simple python command line tool for sort pixels in an image.
 Based on the works of [Kim Asendorf](https://github.com/kimasendorf/ASDFPixelSort).
