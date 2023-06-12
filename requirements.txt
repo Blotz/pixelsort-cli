@@ -1,5 +1,0 @@
-filetype~=1.2.0
-numpy~=1.24.3
-opencv-python~=4.7.0.72
-pytest~=7.3.2
-setuptools~=67.7.1
