@@ -4,6 +4,9 @@ All image processing functions
 import numpy as np
 import cv2
 import scipy
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def process_image(image: np.ndarray, angle: float, threshold: float, sort_brightest: bool, reverse_sort: bool) -> np.ndarray:
@@ -21,30 +24,30 @@ def process_image(image: np.ndarray, angle: float, threshold: float, sort_bright
         np.ndarray: the sorted image
     """
 
-    print(f"Processing image with angle={angle}, threshold={threshold}, sort_brightest={sort_brightest}, reverse_sort={reverse_sort}")
+    logger.info(f"Processing image with angle={angle}, threshold={threshold}, sort_brightest={sort_brightest}, reverse_sort={reverse_sort}")
 
-    print("Rotating image...")
+    logger.debug("Rotating image...")
     image_shape = np.shape(image)
     image = scipy.ndimage.rotate(image, angle, mode='reflect')
 
-    print("Calculating areas of light and dark...")
+    logger.debug("Calculating areas of light and dark...")
     contrast: np.ndarray = create_contrast_mask(image, threshold)
     if sort_brightest:  # invert image if we are trying to sort the brightest areas
         contrast: np.ndarray = cv2.bitwise_not(contrast)
     
-    print("Sorting image...")
+    logger.debug("Sorting image...")
     for x in range(image.shape[1]):
         column_contrast = contrast[:, x]
         column_image = image[:, x]
         process_slice(column_contrast, column_image, reverse_sort)
 
-    print("Unrotating...")
+    logger.debug("Unrotating...")
     image = scipy.ndimage.rotate(image, -angle, mode='constant')
     new_image_shape = np.shape(image)
     image = image[int(new_image_shape[0]/2 - image_shape[0]/2):int(new_image_shape[0]/2 + image_shape[0]/2),
                   int(new_image_shape[1]/2 - image_shape[1]/2):int(new_image_shape[1]/2 + image_shape[1]/2)]    
 
-    print("Done!")
+    logger.info("Done!")
     return image
 
 

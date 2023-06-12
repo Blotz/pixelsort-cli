@@ -8,6 +8,9 @@ import pathlib
 import cv2
 import numpy as np
 import scipy
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def main() -> None:
@@ -22,16 +25,33 @@ def main() -> None:
                         required=False)
     # file output
     parser.add_argument("--output", type=str, help="path to output file", default=None, required=False)
+    # select log level
+    log_levels = parser.add_mutually_exclusive_group()
+    log_levels.add_argument("--verbose", action="store_true", help="print debug messages")
+    log_levels.add_argument("--quiet", action="store_true", help="print less messages")
 
+    # parse logging args
     args = parser.parse_args()
 
+    # loggging
+    if args.verbose:
+        logging.basicConfig(level=logging.DEBUG)
+    elif args.quiet:
+        logging.basicConfig(level=logging.WARNING)
+    else:
+        logging.basicConfig(level=logging.INFO)
+
+    logger.debug("loading arguments")
+    # get arguments
     image_path = pathlib.Path(args.image_path)
     angle = args.angle
     threshold = args.threshold
     sort_brightest = args.sort_brightest
     reversed_direction = args.reverse_sorting
     output_path = args.output
+    verbose = args.verbose
 
+    logging.debug("Testing to see if the path is valid")
     # Parse image path
     if not cli.valid_read_image_path(image_path):
         sys.exit(-1)
@@ -44,8 +64,10 @@ def main() -> None:
 
     # save image
     if output_path is None:
+        logger.info("Showing image. Press ESC to exit")
         # show image if no output path is given
-        return image.show_image(image_data)
+        image.show_image(image_data)
+        sys.exit(0)
 
     # Parse output path
     output_path = pathlib.Path(output_path)
@@ -57,3 +79,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+    sys.exit(0)
