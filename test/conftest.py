@@ -1,7 +1,6 @@
 import pytest
 import cv2
 import numpy as np
-from pixelsort import direction
 
 
 # create image fixture
@@ -20,57 +19,105 @@ def image() -> np.ndarray:
 # array of test cases
 test_cases = [
     {
-        "direction": direction.Direction.UP,
+        "angle": 0,
+        "threshold": 1,
+        "sort_brightest": False,
+        "reverse_sort": False
+    },
+    {
+        "angle": 45,
+        "threshold": 1,
+        "sort_brightest": False,
+        "reverse_sort": False
+    },
+    {
+        "angle": 90,
+        "threshold": 1,
+        "sort_brightest": False,
+        "reverse_sort": False
+    },
+    {
+        "angle": 135,
+        "threshold": 1,
+        "sort_brightest": False,
+        "reverse_sort": False
+    },
+    {
+        "angle": 180,
+        "threshold": 1,
+        "sort_brightest": False,
+        "reverse_sort": False
+    },
+    {
+        "angle": 225,
+        "threshold": 1,
+        "sort_brightest": False,
+        "reverse_sort": False
+    },
+    {
+        "angle": 270,
+        "threshold": 1,
+        "sort_brightest": False,
+        "reverse_sort": False
+    },
+    {
+        "angle": 315,
+        "threshold": 1,
+        "sort_brightest": False,
+        "reverse_sort": False
+    },
+    {
+        "angle": 0,
         "threshold": 0.5,
-        "invert": False,
+        "sort_brightest": False,
         "reverse_sort": False
     },
     {
-        "direction": direction.Direction.DOWN,
-        "threshold": 0.5,
-        "invert": False,
+        "angle": 0,
+        "threshold": 0,
+        "sort_brightest": False,
         "reverse_sort": False
     },
     {
-        "direction": direction.Direction.LEFT,
-        "threshold": 0.5,
-        "invert": False,
+        "angle": 0,
+        "threshold": -0.5,
+        "sort_brightest": False,
         "reverse_sort": False
     },
     {
-        "direction": direction.Direction.RIGHT,
-        "threshold": 0.5,
-        "invert": False,
+        "angle": 0,
+        "threshold": 1,
+        "sort_brightest": True,
         "reverse_sort": False
     },
     {
-        "direction": direction.Direction.RIGHT,
-        "threshold": 0.0,
-        "invert": False,
-        "reverse_sort": False
-    },
-    {
-        "direction": direction.Direction.RIGHT,
-        "threshold": 1.0,
-        "invert": False,
-        "reverse_sort": False
-    },
-    {
-        "direction": direction.Direction.RIGHT,
-        "threshold": 0.5,
-        "invert": True,
-        "reverse_sort": False
-    },
-    {
-        "direction": direction.Direction.RIGHT,
-        "threshold": 0.5,
-        "invert": False,
+        "angle": 0,
+        "threshold": 1,
+        "sort_brightest": False,
         "reverse_sort": True
     },
     {
-        "direction": direction.Direction.RIGHT,
-        "threshold": 0.5,
-        "invert": True,
+        "angle": 0,
+        "threshold": 1,
+        "sort_brightest": True,
         "reverse_sort": True
+    },
+    {
+        "angle": 0,
+        "threshold": 1,
+        "sort_brightest": False,
+        "reverse_sort": False
+    },
+    {
+        "angle": 0,
+        "threshold": 1,
+        "sort_brightest": False,
+        "reverse_sort": False
+    },
+    {
+        "angle": 0,
+        "threshold": 1,
+        "sort_brightest": False,
+        "reverse_sort": False
     }
 ]

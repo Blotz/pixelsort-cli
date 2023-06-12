@@ -1,5 +1,4 @@
 from pixelsort import (__name__ as __package__name__, __doc__ as __package__doc__)
-from pixelsort import direction as search_direction
 from pixelsort import image
 from pixelsort import cli
 
@@ -8,17 +7,18 @@ import sys
 import pathlib
 import cv2
 import numpy as np
+import scipy
 
 
 def main() -> None:
     # read input from command line
     parser = argparse.ArgumentParser(prog=__package__name__, description=__package__doc__)
     parser.add_argument("image_path", type=str, help="path to image")
-    parser.add_argument("direction", type=str, help="direction to sort pixels", choices=["up", "down", "left", "right"])
+    parser.add_argument("angle", type=float, help="angle that the image is sorted. 0° is up. [0, 360]")
     # optional argument
-    parser.add_argument("--threshold", type=float, help="threshold for contrast", default=1.0)
-    parser.add_argument("--invert", type=bool, help="invert the selected area", default=False, required=False)
-    parser.add_argument("--reverse_sorting", type=bool, help="reverse the sorting direction", default=False,
+    parser.add_argument("--threshold", type=float, help="threshold for contrast. [-1.0, 1.0] Default: 1.0", default=1.0)
+    parser.add_argument("--sort_brightest", type=bool, help="Sort the brightest area of the image. Default: True", default=True)
+    parser.add_argument("--reverse_sorting", type=bool, help="Sorts the pixels from lightest to darkest instead of darkest to lightest. Default: False", default=False,
                         required=False)
     # file output
     parser.add_argument("--output", type=str, help="path to output file", default=None, required=False)
@@ -26,9 +26,9 @@ def main() -> None:
     args = parser.parse_args()
 
     image_path = pathlib.Path(args.image_path)
-    direction = search_direction.Direction(args.direction)
+    angle = args.angle
     threshold = args.threshold
-    invert = args.invert
+    sort_brightest = args.sort_brightest
     reversed_direction = args.reverse_sorting
     output_path = args.output
 
@@ -38,9 +38,9 @@ def main() -> None:
 
     # load image array
     image_data: np.ndarray = cv2.imread(str(image_path))
-
+  
     # process image
-    image.process_image(image_data, direction, threshold, invert, reversed_direction)
+    image_data = image.process_image(image_data, angle, threshold, sort_brightest, reversed_direction)
 
     # save image
     if output_path is None:
