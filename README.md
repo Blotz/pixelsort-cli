@@ -34,26 +34,28 @@ pixelsort --help
 ```
 
 ```bash
-usage: pixelsort [-h] [--threshold THRESHOLD] [--invert INVERT] [--reverse_sorting REVERSE_SORTING] [--output OUTPUT] image_path {up,down,left,right}
+usage: pixelsort [-h] [--threshold THRESHOLD] [--sort_brightest SORT_BRIGHTEST] [--reverse_sorting REVERSE_SORTING] [--output OUTPUT]
+                 image_path angle
 
-Command line tool for sorting pixels
+Command line tool for sorting pixels in images
 
 positional arguments:
   image_path            path to image
-  {up,down,left,right}  direction to sort pixels
+  angle                 angle that the image is sorted. 0° is up. [0, 360]
 
 options:
   -h, --help            show this help message and exit
   --threshold THRESHOLD
-                        threshold for contrast
-  --invert INVERT       invert the selected area
+                        threshold for contrast. [-1.0, 1.0] Default: 1.0
+  --sort_brightest SORT_BRIGHTEST
+                        Sort the brightest area of the image. Default: True
   --reverse_sorting REVERSE_SORTING
-                        reverse the sorting direction
+                        Sorts the pixels from lightest to darkest instead of darkest to lightest. Default: False
   --output OUTPUT       path to output file
 ```
 
 ```bash
-pixelsort  data/mountains.jpg right --threshold 1.2 --invert True --output out.png
+pixelsort data/mountains.jpg 90 --threshold 1.2
 ```
 
 ![example 1](https://raw.githubusercontent.com/Blotz/pixelsort-cli/main/data/example1.png)
