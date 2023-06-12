@@ -17,9 +17,9 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    'numpy',
-    'opencv-python',
-    'filetype'
+    'numpy~=1.24.3',
+    'opencv-python~=4.7.0.72',
+    'filetype~=1.2.0'
 ]
 
 [project.urls]
@@ -31,7 +31,7 @@ pixelsort = "pixelsort.__main__:main"
 
 [project.optional-dependencies]
 test = [
-    'pytest'
+    'pytest~=7.3.2'
 ]
 
 [tool.pytest.ini_options]
