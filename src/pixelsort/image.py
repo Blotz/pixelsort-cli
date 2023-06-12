@@ -1,55 +1,60 @@
 """image.py
 All image processing functions
 """
-from pixelsort.direction import Direction
 import numpy as np
 import cv2
+import scipy
 
 
-def process_image(image: np.ndarray, direction: Direction, threshold: float, invert: bool, reverse_sort: bool) -> None:
-    """process the given image
+def process_image(image: np.ndarray, angle: float, threshold: float, sort_brightest: bool, reverse_sort: bool) -> np.ndarray:
+    """
+    Sorts the image in the given direction
 
     Args:
-        image (np.ndarray): the image to processed
-        direction (Direction): the direction to sort the pixels
-        threshold (float): the threshold for the contrast mask
-        invert (bool): True if the selected area should be inverted
-        reverse_sort (bool): True if the pixels should be sorted in reverse
+        image (np.ndarray): the image to sort
+        angle (float): the angle to sort the image
+        threshold (float): the threshold for contrast
+        sort_brightest (bool): sort the brightest area of the image
+        reverse_sort (bool): sort the pixels from lightest to darkest instead of darkest to lightest
+
+    Returns:
+        np.ndarray: the sorted image
     """
-    is_sort_reverse = direction in [Direction.UP, Direction.LEFT]
-    is_vertical = direction in [Direction.UP, Direction.DOWN]
 
-    print(f"Processing image with {direction.name} direction, threshold={threshold}, invert={invert}, reverse_sort={reverse_sort}")
+    print(f"Processing image with angle={angle}, threshold={threshold}, sort_brightest={sort_brightest}, reverse_sort={reverse_sort}")
 
+    print("Rotating image...")
+    image_shape = np.shape(image)
+    image = scipy.ndimage.rotate(image, angle, mode='reflect')
+
+    print("Calculating areas of light and dark...")
     contrast: np.ndarray = create_contrast_mask(image, threshold)
-    if invert:  # invert image if sorting in reverse
+    if sort_brightest:  # invert image if we are trying to sort the brightest areas
         contrast: np.ndarray = cv2.bitwise_not(contrast)
-    # show_image(contrast)
-    # flip sort direction if sorting in reverse
-    if reverse_sort:
-        is_sort_reverse = not is_sort_reverse
+    
+    print("Sorting image...")
+    for x in range(image.shape[1]):
+        column_contrast = contrast[:, x]
+        column_image = image[:, x]
+        process_slice(column_contrast, column_image, reverse_sort)
 
-    if is_vertical:
-        for x in range(image.shape[1]):
-            column_contrast = contrast[:, x]
-            column_image = image[:, x]
-            process_slice(column_contrast, column_image, is_sort_reverse)
-    else:
-        for y in range(image.shape[0]):
-            row_contrast = contrast[y, :]
-            row_image = image[y, :]
-            process_slice(row_contrast, row_image, is_sort_reverse)
+    print("Unrotating...")
+    image = scipy.ndimage.rotate(image, -angle, mode='constant')
+    new_image_shape = np.shape(image)
+    image = image[int(new_image_shape[0]/2 - image_shape[0]/2):int(new_image_shape[0]/2 + image_shape[0]/2),
+                  int(new_image_shape[1]/2 - image_shape[1]/2):int(new_image_shape[1]/2 + image_shape[1]/2)]    
 
-    print("Done")
+    print("Done!")
+    return image
 
 
-def process_slice(contrast_slice: np.ndarray, image_slice: np.ndarray, is_sort_reverse: bool) -> None:
+def process_slice(contrast_slice: np.ndarray, image_slice: np.ndarray, reverse: bool) -> None:
     """process a slice of the image
 
     Args:
         contrast_slice (np.ndarray): 1d slice of the contrast mask
         image_slice (np.ndarray): 1d slice of the image
-        is_sort_reverse (bool): True if the pixels should be sorted in reverse
+        reverse (bool): True if the pixels should be sorted in reverse
     """
     black_pixels, = np.where(contrast_slice == 0)
     white_pixels, = np.where(contrast_slice == 255)
@@ -71,7 +76,7 @@ def process_slice(contrast_slice: np.ndarray, image_slice: np.ndarray, is_sort_r
             x2 = white_pixels[0] - 1
 
         # sort pixels by luminance
-        sort_pixels(image_slice[x1:x2], reverse=is_sort_reverse)
+        sort_pixels(image_slice[x1:x2], reverse=reverse)
         # print(x1, x2, end=" ")
 
         # remove all black pixels before the next white pixel
