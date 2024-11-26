@@ -100,8 +100,10 @@ def create_contrast_mask(image: np.ndarray, threshold: float) -> np.ndarray:
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     mean, std = cv2.meanStdDev(gray_image)
     # Calculate the lower and upper threshold values
-    lower_thresh = int(mean - threshold * std)
-    upper_thresh = int(mean + threshold * std)
+    # Conversion of an array with ndim > 0 to a scalar is deprecated. 
+    # Using .item() to extract to single value.
+    lower_thresh = int(mean.item() - threshold * std.item())
+    upper_thresh = int(mean.item() + threshold * std.item())
     # generate mask
     contrast: np.ndarray = cv2.inRange(gray_image, lower_thresh, upper_thresh)
     return contrast

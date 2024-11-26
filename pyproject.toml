@@ -10,17 +10,22 @@ authors = [
 ]
 description = "A Python CLI tool for sorting pixels in images."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
 classifiers = [
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    'numpy>=1.26.4,<2.2.0',
-    'scipy>=1.12.0',
-    'opencv-python>=4.8.1.78',
-    'filetype~=1.2.0'
+    'numpy',
+    'scipy',
+    'opencv-python',
+    'filetype'
 ]
 
 [project.urls]
@@ -32,7 +37,7 @@ pixelsort = "pixelsort.__main__:main"
 
 [project.optional-dependencies]
 test = [
-    'pytest>=7.3.2,<8.4.0'
+    'pytest',
 ]
 
 [tool.pytest.ini_options]
@@ -41,3 +46,12 @@ addopts = "-ra -q"
 testpaths = [
     "tests"
 ]
+
+# [tool.tox]
+# requires = ["tox>=4.19"]
+# env_list = ["py313", "py312", "py311", "py310", "local"]
+
+# [tool.tox.env_run_base]
+# description = "Run test under {base_python}"
+# commands = [["pytest"]]
+# allowlist_externals = ["pytest"]
