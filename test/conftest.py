@@ -15,9 +15,20 @@ def image() -> np.ndarray:
     
     return image
 
+# create template fixture
+@pytest.fixture
+def template() -> np.ndarray:
+    # load template
+    template = cv2.imread("test/test_template.png")
+
+    if template is None:
+        # error loading template
+        raise Exception("Error loading template")
+    
+    return template
 
 # array of test cases
-test_cases = [
+contrast_test_case = [
     {
         "angle": 0,
         "threshold": 1,
@@ -120,4 +131,67 @@ test_cases = [
         "sort_brightest": False,
         "reverse_sort": False
     }
+]
+
+template_test_case = [
+    {
+        "angle": 0,
+        "sort_brightest": False,
+        "reverse_sort": False
+    },
+    {
+        "angle": 45,
+        "sort_brightest": False,
+        "reverse_sort": False
+    },
+    {
+        "angle": 90,
+        "sort_brightest": False,
+        "reverse_sort": False
+    },
+    {
+        "angle": 135,
+        "sort_brightest": False,
+        "reverse_sort": False
+    },
+    {
+        "angle": 180,
+        "sort_brightest": False,
+        "reverse_sort": False
+    },
+    {
+        "angle": 225,
+        "sort_brightest": False,
+        "reverse_sort": False
+    },
+    {
+        "angle": 270,
+        "sort_brightest": False,
+        "reverse_sort": False
+    },
+    {
+        "angle": 315,
+        "sort_brightest": False,
+        "reverse_sort": False
+    },
+    {
+        "angle": 0,
+        "sort_brightest": True,
+        "reverse_sort": False
+    },
+    {
+        "angle": 0,
+        "sort_brightest": False,
+        "reverse_sort": True
+    },
+    {
+        "angle": 0,
+        "sort_brightest": True,
+        "reverse_sort": True
+    },
+    {
+        "angle": 0,
+        "sort_brightest": False,
+        "reverse_sort": False
+    },
 ]

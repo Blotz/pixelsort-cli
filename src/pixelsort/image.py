@@ -8,8 +8,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
-def process_image(image: np.ndarray, angle: float, threshold: float, sort_brightest: bool, reverse_sort: bool) -> np.ndarray:
+def process_image(image: np.ndarray, create_mask, angle: float, sort_brightest: bool, reverse_sort: bool) -> np.ndarray:
     """
     Sorts the image in the given direction
 
@@ -23,23 +22,22 @@ def process_image(image: np.ndarray, angle: float, threshold: float, sort_bright
     Returns:
         np.ndarray: the sorted image
     """
-
-    logger.info(f"Processing image with angle={angle}, threshold={threshold}, sort_brightest={sort_brightest}, reverse_sort={reverse_sort}")
+    logger.info(f"Processing image with angle={angle}, sort_brightest={sort_brightest}, reverse_sort={reverse_sort}")
 
     logger.debug("Rotating image...")
     image_shape = np.shape(image)
     image = scipy.ndimage.rotate(image, angle, mode='reflect')
 
     logger.debug("Calculating areas of light and dark...")
-    contrast: np.ndarray = create_contrast_mask(image, threshold)
+    mask: np.ndarray = create_mask(image)
     if sort_brightest:  # invert image if we are trying to sort the brightest areas
-        contrast: np.ndarray = cv2.bitwise_not(contrast)
+        mask: np.ndarray = cv2.bitwise_not(mask)
     
     logger.debug("Sorting image...")
     for x in range(image.shape[1]):
-        column_contrast = contrast[:, x]
+        column_mask = mask[:, x]
         column_image = image[:, x]
-        process_slice(column_contrast, column_image, reverse_sort)
+        process_slice(column_mask, column_image, reverse_sort)
 
     logger.debug("Unrotating...")
     image = scipy.ndimage.rotate(image, -angle, mode='constant')
@@ -51,22 +49,22 @@ def process_image(image: np.ndarray, angle: float, threshold: float, sort_bright
     return image
 
 
-def process_slice(contrast_slice: np.ndarray, image_slice: np.ndarray, reverse: bool) -> None:
+def process_slice(mask_slice: np.ndarray, image_slice: np.ndarray, reverse: bool) -> None:
     """process a slice of the image
 
     Args:
-        contrast_slice (np.ndarray): 1d slice of the contrast mask
+        mask_slice (np.ndarray): 1d slice of the mask mask
         image_slice (np.ndarray): 1d slice of the image
         reverse (bool): True if the pixels should be sorted in reverse
     """
-    black_pixels, = np.where(contrast_slice == 0)
-    white_pixels, = np.where(contrast_slice == 255)
+    black_pixels, = np.where(mask_slice == 0)
+    white_pixels, = np.where(mask_slice == 255)
 
     # loop through black pixels in this row
     while black_pixels.size > 0 or white_pixels.size > 0:
         # get the next black pixel
         if black_pixels.size == 0:
-            x1 = contrast_slice.shape[0]
+            x1 = mask_slice.shape[0]
         else:
             x1 = black_pixels[0]
 
@@ -74,7 +72,7 @@ def process_slice(contrast_slice: np.ndarray, image_slice: np.ndarray, reverse: 
         white_pixels = white_pixels[white_pixels > x1]
         # get the next white pixel
         if white_pixels.size == 0:  # no more white pixels
-            x2 = contrast_slice.shape[0]
+            x2 = mask_slice.shape[0]
         else:
             x2 = white_pixels[0] - 1
 
@@ -86,7 +84,7 @@ def process_slice(contrast_slice: np.ndarray, image_slice: np.ndarray, reverse: 
         black_pixels = black_pixels[black_pixels > x2]
 
 
-def create_contrast_mask(image: np.ndarray, threshold: float) -> np.ndarray:
+def create_contrast_mask(threshold: float, image: np.ndarray) -> np.ndarray:
     """Create a contrast mask for the given image
 
     Args:
@@ -105,9 +103,30 @@ def create_contrast_mask(image: np.ndarray, threshold: float) -> np.ndarray:
     lower_thresh = int(mean.item() - threshold * std.item())
     upper_thresh = int(mean.item() + threshold * std.item())
     # generate mask
-    contrast: np.ndarray = cv2.inRange(gray_image, lower_thresh, upper_thresh)
-    return contrast
+    mask: np.ndarray = cv2.inRange(gray_image, lower_thresh, upper_thresh)
+    return mask
 
+def create_template_mask(template: np.ndarray, image: np.ndarray) -> np.ndarray:
+    """Create a mask for the given image using the template
+
+    Args:
+        image (np.ndarray): the image to create the mask for
+        template (np.ndarray): the template to use for the mask
+
+    Returns:
+        np.ndarray: a contrast mask
+    """
+    # remove bg color channels
+    template = template[:,:,0]
+    # Tile the template to the size of the image
+    horizontal_tiles = int(image.shape[1] / template.shape[1]) + 1
+    vertical_tiles = int(image.shape[0] / template.shape[0]) + 1
+    mask = np.tile(template, (vertical_tiles, horizontal_tiles))
+    
+    # Crop the mask to the size of the image
+    mask = mask[:image.shape[0], :image.shape[1]]
+    
+    return mask
 
 def sort_pixels(image: np.ndarray, reverse: bool = False) -> None:
     """sort the pixels in the given direction by luminance
