@@ -60,6 +60,18 @@ pixelsort data/mountains.jpg 90 --threshold 1.2
 
 ![example 1](https://raw.githubusercontent.com/Blotz/pixelsort-cli/main/data/example1.png)
 
+```bash
+pixelsort data/mountains.jpg 90 --template_path data/pyramid_mask.png
+```
+
+![example 2](https://raw.githubusercontent.com/Blotz/pixelsort-cli/main/data/example2.png)
+
+```bash
+pixelsort data/mountains.jpg 30 --threshold 1.2
+```
+
+![example 3](https://raw.githubusercontent.com/Blotz/pixelsort-cli/main/data/example3.png)
+
 ---
 
 ## License
