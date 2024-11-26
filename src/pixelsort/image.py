@@ -5,10 +5,11 @@ import numpy as np
 import cv2
 import scipy
 import logging
+from functools import partial
 
 logger = logging.getLogger(__name__)
 
-def process_image(image: np.ndarray, create_mask, angle: float, sort_brightest: bool, reverse_sort: bool) -> np.ndarray:
+def process_image(image: np.ndarray, create_mask: partial[np.ndarray], angle: float, sort_brightest: bool, reverse_sort: bool) -> np.ndarray:
     """
     Sorts the image in the given direction
 
@@ -38,7 +39,7 @@ def process_image(image: np.ndarray, create_mask, angle: float, sort_brightest: 
         column_mask = mask[:, x]
         column_image = image[:, x]
         process_slice(column_mask, column_image, reverse_sort)
-
+    
     logger.debug("Unrotating...")
     image = scipy.ndimage.rotate(image, -angle, mode='constant')
     new_image_shape = np.shape(image)
