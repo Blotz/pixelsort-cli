@@ -1,4 +1,4 @@
-from pixelsort import (__name__ as __package__name__, __doc__ as __package__doc__)
+from pixelsort import __name__ as __package__name__, __doc__ as __package__doc__
 from pixelsort import image
 from pixelsort import cli
 
@@ -15,23 +15,46 @@ logger = logging.getLogger(__name__)
 
 def main() -> None:
     # read input from command line
-    parser = argparse.ArgumentParser(prog=__package__name__, description=__package__doc__)
+    parser = argparse.ArgumentParser(
+        prog=__package__name__, description=__package__doc__
+    )
     parser.add_argument("image_path", type=str, help="path to image")
-    parser.add_argument("angle", type=float, help="angle that the image is sorted. 0° is up. [0, 360]")
+    parser.add_argument(
+        "angle", type=float, help="angle that the image is sorted. 0° is up. [0, 360]"
+    )
     # Either threshold or template_path optional
     group = parser.add_mutually_exclusive_group()
-    group.add_argument("--threshold", type=float, help="threshold for contrast. [-1.0, 1.0] Default: 1.0", default=1.0)
+    group.add_argument(
+        "--threshold",
+        type=float,
+        help="threshold for contrast. [-1.0, 1.0] Default: 1.0",
+        default=1.0,
+    )
     group.add_argument("--template_path", type=str, help="path to template image")
     parser.add_argument_group(group)
     # optional arguments
-    parser.add_argument("--sort_brightest", type=bool, help="Sort the brightest area of the image. Default: True", default=True)
-    parser.add_argument("--reverse_sorting", type=bool, help="Sorts the pixels from lightest to darkest instead of darkest to lightest. Default: False", default=False,
-                        required=False)
+    parser.add_argument(
+        "--sort_brightest",
+        type=bool,
+        help="Sort the brightest area of the image. Default: True",
+        default=True,
+    )
+    parser.add_argument(
+        "--reverse_sorting",
+        type=bool,
+        help="Sorts the pixels from lightest to darkest instead of darkest to lightest. Default: False",
+        default=False,
+        required=False,
+    )
     # file output
-    parser.add_argument("--output", type=str, help="path to output file", default=None, required=False)
+    parser.add_argument(
+        "--output", type=str, help="path to output file", default=None, required=False
+    )
     # select log level
     log_levels = parser.add_mutually_exclusive_group()
-    log_levels.add_argument("--verbose", action="store_true", help="print debug messages")
+    log_levels.add_argument(
+        "--verbose", action="store_true", help="print debug messages"
+    )
     log_levels.add_argument("--quiet", action="store_true", help="print less messages")
 
     # parse logging args
@@ -62,20 +85,22 @@ def main() -> None:
 
     # load image array
     image_data: np.ndarray = cv2.imread(str(image_path))
-  
+
     # process image
     if template_path is not None:
         template_path = pathlib.Path(template_path)
         # Parse template path
         if not cli.valid_read_path(template_path):
             sys.exit(-1)
-        
+
         template = cv2.imread(str(template_path))
         create_mask = partial(image.create_template_mask, template)
     else:
         create_mask = partial(image.create_contrast_mask, threshold)
-        
-    image_data = image.process_image(image_data, create_mask, angle, sort_brightest, reversed_direction)
+
+    image_data = image.process_image(
+        image_data, create_mask, angle, sort_brightest, reversed_direction
+    )
 
     # save image
     if output_path is None:
