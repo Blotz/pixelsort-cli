@@ -39,13 +39,14 @@ pixelsort = "pixelsort.__main__:main"
 [project.optional-dependencies]
 test = [
     'pytest',
+    'pytest-xdist',  # use -n cpu_count to speedup pytest
 ]
 
 [tool.pytest.ini_options]
 minversion = "6.0"
 addopts = "-ra -q"
 testpaths = [
-    "tests"
+    "test"
 ]
 
 [tool.tox]

@@ -2,6 +2,8 @@ import pytest
 import cv2
 import numpy as np
 
+import itertools
+
 
 # create image fixture
 @pytest.fixture
@@ -28,170 +30,46 @@ def template() -> np.ndarray:
     return template
 
 # array of test cases
+angles = [0, 45, -90]
+sort_brightest_options = [False, True]
+reverse_sort_options = [False, True]
+thresholds = [1, 0.5, -0.5]
+template_angles = [0, 45, -90]
+template_scales = [0.5, 1.5]
+
 contrast_test_case = [
     {
-        "angle": 0,
-        "threshold": 1,
-        "sort_brightest": False,
-        "reverse_sort": False
-    },
-    {
-        "angle": 45,
-        "threshold": 1,
-        "sort_brightest": False,
-        "reverse_sort": False
-    },
-    {
-        "angle": 90,
-        "threshold": 1,
-        "sort_brightest": False,
-        "reverse_sort": False
-    },
-    {
-        "angle": 135,
-        "threshold": 1,
-        "sort_brightest": False,
-        "reverse_sort": False
-    },
-    {
-        "angle": 180,
-        "threshold": 1,
-        "sort_brightest": False,
-        "reverse_sort": False
-    },
-    {
-        "angle": 225,
-        "threshold": 1,
-        "sort_brightest": False,
-        "reverse_sort": False
-    },
-    {
-        "angle": 270,
-        "threshold": 1,
-        "sort_brightest": False,
-        "reverse_sort": False
-    },
-    {
-        "angle": 315,
-        "threshold": 1,
-        "sort_brightest": False,
-        "reverse_sort": False
-    },
-    {
-        "angle": 0,
-        "threshold": 0.5,
-        "sort_brightest": False,
-        "reverse_sort": False
-    },
-    {
-        "angle": 0,
-        "threshold": 0,
-        "sort_brightest": False,
-        "reverse_sort": False
-    },
-    {
-        "angle": 0,
-        "threshold": -0.5,
-        "sort_brightest": False,
-        "reverse_sort": False
-    },
-    {
-        "angle": 0,
-        "threshold": 1,
-        "sort_brightest": True,
-        "reverse_sort": False
-    },
-    {
-        "angle": 0,
-        "threshold": 1,
-        "sort_brightest": False,
-        "reverse_sort": True
-    },
-    {
-        "angle": 0,
-        "threshold": 1,
-        "sort_brightest": True,
-        "reverse_sort": True
-    },
-    {
-        "angle": 0,
-        "threshold": 1,
-        "sort_brightest": False,
-        "reverse_sort": False
-    },
-    {
-        "angle": 0,
-        "threshold": 1,
-        "sort_brightest": False,
-        "reverse_sort": False
-    },
-    {
-        "angle": 0,
-        "threshold": 1,
-        "sort_brightest": False,
-        "reverse_sort": False
-    }
+        "angle": angle,
+        "sort_brightest": sort_brightest,
+        "reverse_sort": reverse_sort,
+        "threshold": threshold, 
+    } for angle, sort_brightest, reverse_sort, threshold in itertools.product(
+        angles,
+        sort_brightest_options,
+        reverse_sort_options,
+        thresholds
+    )
 ]
 
 template_test_case = [
     {
-        "angle": 0,
-        "sort_brightest": False,
-        "reverse_sort": False
-    },
-    {
-        "angle": 45,
-        "sort_brightest": False,
-        "reverse_sort": False
-    },
-    {
-        "angle": 90,
-        "sort_brightest": False,
-        "reverse_sort": False
-    },
-    {
-        "angle": 135,
-        "sort_brightest": False,
-        "reverse_sort": False
-    },
-    {
-        "angle": 180,
-        "sort_brightest": False,
-        "reverse_sort": False
-    },
-    {
-        "angle": 225,
-        "sort_brightest": False,
-        "reverse_sort": False
-    },
-    {
-        "angle": 270,
-        "sort_brightest": False,
-        "reverse_sort": False
-    },
-    {
-        "angle": 315,
-        "sort_brightest": False,
-        "reverse_sort": False
-    },
-    {
-        "angle": 0,
-        "sort_brightest": True,
-        "reverse_sort": False
-    },
-    {
-        "angle": 0,
-        "sort_brightest": False,
-        "reverse_sort": True
-    },
-    {
-        "angle": 0,
-        "sort_brightest": True,
-        "reverse_sort": True
-    },
-    {
-        "angle": 0,
-        "sort_brightest": False,
-        "reverse_sort": False
-    },
+        "angle": angle,
+        "sort_brightest": sort_brightest,
+        "reverse_sort": reverse_sort,
+        "template_angle": template_angle,
+        "template_scale": template_scale
+    }
+    for angle, sort_brightest, reverse_sort, template_angle, template_scale in itertools.product(
+        angles,
+        sort_brightest_options,
+        reverse_sort_options,
+        template_angles,
+        template_scales
+    )
 ]
+
+if __name__=="__main__":
+    print(f"contract_test_case: {len(contrast_test_case)}")
+    print(f"template_test_case: {len(template_test_case)}")
+    print(contrast_test_case[:10])
+    print(template_test_case[:10])
