@@ -27,6 +27,14 @@ or
 pip install pixelsort-cli
 ```
 
+or
+
+```bash
+git clone https://github.com/Blotz/pixelsort-cli
+cd pixelsort-cli
+pip install .
+```
+
 ## Examples
 
 ```bash
