@@ -34,7 +34,10 @@ def main() -> None:
         help="threshold for contrast. [-1.0, 1.0] Default: 1.0",
         default=1.0,
     )
-    threshold_template_group.add_argument("--template_path", type=str, help="path to template image")
+    template_group = threshold_template_group.add_argument_group("Template Options")
+    template_group.add_argument("--template_path", type=str, help="path to template image")
+    template_group.add_argument("--template_scale", type=float, help="scale up and down the template", default=1.0)
+    template_group.add_argument("--template_angle", type=float, help="angle of template", default=0)
 
     # optional arguments
     parser.add_argument(
@@ -79,6 +82,8 @@ def main() -> None:
     angle = args.angle
     threshold = args.threshold
     template_path = args.template_path
+    template_scale = args.template_scale
+    template_angle = args.template_angle
     sort_brightest = args.sort_brightest
     reversed_direction = args.reverse_sorting
     output_path = args.output
@@ -86,7 +91,7 @@ def main() -> None:
     # Manually check for mutual exclusive group
     if image_path is None and sys.stdin.isatty():
         parser.print_usage(sys.stderr)
-        parser.error("one of the arguments --image_path stdin is required")
+        parser.error("one of the arguments --image_path [stdin] is required")
         
         sys.exit(2)
 
@@ -116,7 +121,8 @@ def main() -> None:
             sys.exit(-1)
 
         template = cv2.imread(str(template_path))
-        create_mask = partial(image.create_template_mask, template)
+        template = image.scale_image(template, template_scale)
+        create_mask = partial(image.create_template_mask, template, template_angle-angle)
     else:
         create_mask = partial(image.create_contrast_mask, threshold)
 

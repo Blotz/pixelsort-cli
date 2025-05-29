@@ -126,7 +126,7 @@ def create_contrast_mask(threshold: float, image: np.ndarray) -> np.ndarray:
     return mask
 
 
-def create_template_mask(template: np.ndarray, image: np.ndarray) -> np.ndarray:
+def create_template_mask(template: np.ndarray, angle: float, image: np.ndarray) -> np.ndarray:
     """Create a mask for the given image using the template
 
     Args:
@@ -138,6 +138,9 @@ def create_template_mask(template: np.ndarray, image: np.ndarray) -> np.ndarray:
     """
     # remove bg color channels
     template = template[:, :, 0]
+    # Rotate Tile
+    template = scipy.ndimage.rotate(template, -angle, mode="constant")
+    
     # Tile the template to the size of the image
     horizontal_tiles = int(image.shape[1] / template.shape[1]) + 1
     vertical_tiles = int(image.shape[0] / template.shape[0]) + 1
@@ -145,7 +148,7 @@ def create_template_mask(template: np.ndarray, image: np.ndarray) -> np.ndarray:
 
     # Crop the mask to the size of the image
     mask = mask[: image.shape[0], : image.shape[1]]
-
+    
     return mask
 
 
@@ -182,5 +185,11 @@ def show_image(image: np.ndarray) -> None:
             break
     cv2.destroyAllWindows()
 
-def output_image(image: np.ndarray) -> None:
-    pass
+def scale_image(image: np.ndarray, scale: float) -> np.ndarray:
+    height, width, _ = image.shape
+    width *= scale
+    height *= scale
+    
+    dim = (int(width), int(height))
+    
+    return cv2.resize(image, dim, interpolation=cv2.INTER_NEAREST)
