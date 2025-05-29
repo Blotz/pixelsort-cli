@@ -181,3 +181,6 @@ def show_image(image: np.ndarray) -> None:
         if key == 27:
             break
     cv2.destroyAllWindows()
+
+def output_image(image: np.ndarray) -> None:
+    pass

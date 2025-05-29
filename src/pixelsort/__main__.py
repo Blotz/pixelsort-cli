@@ -18,20 +18,24 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         prog=__package__name__, description=__package__doc__
     )
-    parser.add_argument("image_path", type=str, help="path to image")
     parser.add_argument(
-        "angle", type=float, help="angle that the image is sorted. 0° is up. [0, 360]"
+        "--angle", type=float, help="angle that the image is sorted. 0° is up. [0, 360]", default=90
     )
+    # Either pipe file or file_path
+    input_source = parser.add_mutually_exclusive_group()
+    input_source.add_argument("--image_path", type=str, help="path to image", default=None)
+    input_source.add_argument('stdin', nargs='?', type=argparse.FileType('r'), default=sys.stdin)
+    
     # Either threshold or template_path optional
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument(
+    threshold_template_group = parser.add_mutually_exclusive_group()
+    threshold_template_group.add_argument(
         "--threshold",
         type=float,
         help="threshold for contrast. [-1.0, 1.0] Default: 1.0",
         default=1.0,
     )
-    group.add_argument("--template_path", type=str, help="path to template image")
-    parser.add_argument_group(group)
+    threshold_template_group.add_argument("--template_path", type=str, help="path to template image")
+
     # optional arguments
     parser.add_argument(
         "--sort_brightest",
@@ -70,21 +74,39 @@ def main() -> None:
 
     logger.debug("loading arguments")
     # get arguments
-    image_path = pathlib.Path(args.image_path)
+    image_path = None if args.image_path is None else pathlib.Path(args.image_path)
+    image_stdin = args.stdin
     angle = args.angle
     threshold = args.threshold
     template_path = args.template_path
     sort_brightest = args.sort_brightest
     reversed_direction = args.reverse_sorting
     output_path = args.output
+    
+    # Manually check for mutual exclusive group
+    if image_path is None and sys.stdin.isatty():
+        parser.print_usage(sys.stderr)
+        parser.error("one of the arguments --image_path stdin is required")
+        
+        sys.exit(2)
 
-    logging.debug("Testing to see if the path is valid")
-    # Parse image path
-    if not cli.valid_read_path(image_path):
-        sys.exit(-1)
+    if image_path is not None:
+        logging.debug("Testing to see if the path is valid")
+        # Parse image path
+        if not cli.valid_read_path(image_path):
+            sys.exit(-1)
 
-    # load image array
-    image_data: np.ndarray = cv2.imread(str(image_path))
+        # load image array
+        image_data: np.ndarray = cv2.imread(str(image_path))
+    else:
+        logging.debug("Reading from stdin")
+        
+        assert not sys.stdin.isatty()
+        
+        with open(0, 'rb') as f: 
+            inpipe = f.read()
+        array = np.frombuffer(inpipe, dtype='uint8')
+        image_data = cv2.imdecode(array, 1)
 
     # process image
     if template_path is not None:
@@ -102,11 +124,9 @@ def main() -> None:
         image_data, create_mask, angle, sort_brightest, reversed_direction
     )
 
-    # save image
+    # Write to stdout
     if output_path is None:
-        logger.info("Showing image. Press ESC to exit")
-        # show image if no output path is given
-        image.show_image(image_data)
+        sys.stdout.buffer.write(cv2.imencode(".png", image_data)[1].tobytes())
         sys.exit(0)
 
     # Parse output path
